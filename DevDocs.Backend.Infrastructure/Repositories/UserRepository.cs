@@ -55,7 +55,7 @@ public class UserRepository : IUserRepository
         
         Console.WriteLine($"Request Payload: {JsonSerializer.Serialize(payload)}");
 
-        var response = await _httpClient.PostAsJsonAsync("https://identity.teamfullstack.io/admin/realms/usman/users", payload);
+        var response = await _httpClient.PostAsJsonAsync($"{_keycloakOptions.Value.AdminUrl}", payload);
 
         Console.WriteLine($"Response Status: {response.StatusCode}");
         var content = await response.Content.ReadAsStringAsync();
