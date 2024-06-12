@@ -19,19 +19,13 @@ internal sealed class AdminAuthorizationDelegatingHandler : DelegatingHandler
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        var authorizationToken = await GetAuthorizationToken(cancellationToken);
+        AuthorizationToken authorizationToken = await GetAuthorizationToken(cancellationToken);
 
         request.Headers.Authorization = new AuthenticationHeaderValue(
             JwtBearerDefaults.AuthenticationScheme,
             authorizationToken.AccessToken);
 
-        var httpResponseMessage = await base.SendAsync(request, cancellationToken);
-
-        if (!httpResponseMessage.IsSuccessStatusCode)
-        {
-            var errorContent = await httpResponseMessage.Content.ReadAsStringAsync();
-            Console.WriteLine($"Error Content: {errorContent}");
-        }
+        HttpResponseMessage httpResponseMessage = await base.SendAsync(request, cancellationToken);
 
         httpResponseMessage.EnsureSuccessStatusCode();
 
@@ -57,15 +51,11 @@ internal sealed class AdminAuthorizationDelegatingHandler : DelegatingHandler
             Content = authorizationRequestContent
         };
 
-        var authorizationResponse = await base.SendAsync(authorizationRequest, cancellationToken);
+        HttpResponseMessage authorizationResponse = await base.SendAsync(authorizationRequest, cancellationToken);
 
-        if (!authorizationResponse.IsSuccessStatusCode)
-        {
-            var error = await authorizationResponse.Content.ReadAsStringAsync();
-            throw new ApplicationException($"Failed to acquire token: {error}");
-        }
+        authorizationResponse.EnsureSuccessStatusCode();
 
         return await authorizationResponse.Content.ReadFromJsonAsync<AuthorizationToken>(cancellationToken) ??
-               throw new ApplicationException("Failed to deserialize token response.");
+               throw new ApplicationException();
     }
 }

@@ -108,9 +108,20 @@ public static class DependencyInjection
         {
             var keycloakOptions = serviceProvider.GetRequiredService<IOptions<KeycloakOptions>>().Value;
             httpClient.BaseAddress = new Uri(keycloakOptions.AdminUrl);
+            Console.WriteLine("admin url");
+            Console.WriteLine(keycloakOptions.AdminUrl);
+            Console.WriteLine("admin url");
         }).AddHttpMessageHandler<AdminAuthorizationDelegatingHandler>();
 
+        services.AddHttpClient<IJwtService, JwtService>((serviceProvider, httpClient) =>
+        {
+            KeycloakOptions keycloakOptions = serviceProvider.GetRequiredService<IOptions<KeycloakOptions>>().Value;
 
+            httpClient.BaseAddress = new Uri(keycloakOptions.TokenUrl);
+            Console.WriteLine("TokenUrl");
+            Console.WriteLine(keycloakOptions.TokenUrl);
+            Console.WriteLine("TokenUrl");
+        });
 
         services.AddHttpContextAccessor();
     }

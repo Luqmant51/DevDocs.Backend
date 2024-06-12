@@ -19,22 +19,6 @@ public class AddUserCommandHandler : IRequestHandler<RegisterUserCommand, Result
         _unitOfWork = unitOfWork;
     }
 
-    //public async Task<Result<Guid>> Handle(AddUserCommand request, CancellationToken cancellationToken)
-    //{
-    //    var user = User.Create(new FirstName(request.FirstName), new LastName(request.LastName), new Email(request.Email));
-    //    await _userRepository.AddUserAsync(user);
-    //    return Result.Success(user.Id);
-    //}
-
-    //public async Task<Result<Guid>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
-    //{
-    //    var user = User.Create(new FirstName(request.FirstName), new LastName(request.LastName), new Email(request.Email));
-    //    var keycloakUserId = await _userRepository.AddUserToKeycloakAsync(user, request.Password);
-    //    user.SetIdentityId(keycloakUserId);
-    //    await _userRepository.AddUserAsync(user);
-    //    return Result.Success(user.Id);
-    //}
-
     public async Task<Result<Guid>> Handle(
         RegisterUserCommand request,
         CancellationToken cancellationToken)
